@@ -73,14 +73,41 @@ int num_words(FILE *infile) {
  * 1 in the event of any errors (e.g. wclist or infile is NULL)
  * and 0 otherwise.
  */
-int count_words(WordCount **wclist, FILE *infile) { return 0; }
+void count_words(WordCount **wclist, FILE *infile) {
+  char word[MAX_WORD_LEN];
+  size_t index = 0;
+  char c;
 
-/*
- * Comparator to sort list by frequency.
- * Useful function: strcmp().
- */
-static bool wordcount_less(const WordCount *wc1, const WordCount *wc2) {
-  return 0;
+  while ((c = fgetc(infile)) != EOF) {
+    if (isalpha(c)) {
+      word[index++] = tolower(c);
+    } else {
+      word[index] = 0;
+      if (strlen(word)) {
+        add_word(wclist, word);
+      }
+      index = 0;
+    }
+  }
+}
+
+static bool wordcount_less(const WordCount* wc1, const WordCount* wc2) {
+    if (wc1 == NULL || wc2 == NULL) {
+        return false;
+    }
+    if (wc1->word == NULL) {
+        return false;
+    } else if (wc2->word == NULL) {
+        return true;
+    }
+
+    if (wc1->count < wc2->count) {
+        return true;
+    } else if (wc1->count > wc2->count) {
+        return false;
+    } else {
+        return strcmp(wc1->word, wc2->word) < 0;
+    }
 }
 
 // In trying times, displays a helpful message.
@@ -144,10 +171,13 @@ int main(int argc, char *argv[]) {
     // No input file specified, instead, read from STDIN instead.
     infile = stdin;
   } else {
-    int i;
-    for (i = 2; i <= argc; i++) {
-      infile = fopen(argv[i - 1], "r");
-      total_words += num_words(infile);
+    for (i = optind; i < argc; i++) {
+      infile = fopen(argv[i], "r");
+      if (count_mode) {
+        total_words += num_words(infile);
+      } else {
+        count_words(&word_counts, infile);
+      }
       fclose(infile);
     }
     // At least one file specified. Useful functions: fopen(), fclose().
@@ -159,7 +189,6 @@ int main(int argc, char *argv[]) {
     printf("The total number of words is: %i\n", total_words);
   } else {
     wordcount_sort(&word_counts, wordcount_less);
-
     printf("The frequencies of each word are: \n");
     fprint_words(word_counts, stdout);
   }

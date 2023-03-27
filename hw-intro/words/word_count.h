@@ -47,7 +47,7 @@ struct word_count {
 typedef struct word_count WordCount;
 
 /* Initialize a word count list, updating the reference to the list */
-int init_words(WordCount **wclist);
+void init_words(WordCount **wclist);
 
 /* Length of a word count list */
 ssize_t len_words(WordCount *wchead);
