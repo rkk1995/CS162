@@ -12,7 +12,7 @@ extern int recur(int i);
 volatile int stuff = 7;
 
 int main(int argc, char *argv[]) {
-    /* A stack allocated variable */
+    /* A stack allocated a variable */
     volatile int i = 0;
 
     /* Dynamically allocate some stuff */
