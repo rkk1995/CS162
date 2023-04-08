@@ -337,4 +337,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+*ccls-cache
+*compile_commands.json
+*.ccls
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,linux,c,vim,emacs,visualstudiocode,clion
